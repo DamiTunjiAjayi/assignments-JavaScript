@@ -19,7 +19,7 @@ for (let i = 1; i <= 10; i++) {
     console.log(i);
   }
 
-//Function to determins the largest number in an array
+//Function to determine the largest number in an array
 
 function getlargestNumber(array) {
     let largest = array[0] // this is to assume the first number in the array is the largest so as to compare with others in the array
