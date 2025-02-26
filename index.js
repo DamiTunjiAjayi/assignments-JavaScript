@@ -12,4 +12,9 @@ console.log('Hello World');
 //create variable to get currentDate and log the Date Time
 const currentDate = new Date ();
 
-console.log(currentDate);
+console.log('The current Date and Time is: ',currentDate);
+
+//print numbers from 1 - 10
+for (let i = 1; i <= 10; i++) {
+    console.log(i);
+  }
