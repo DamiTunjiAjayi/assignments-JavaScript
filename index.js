@@ -34,4 +34,4 @@ function getlargestNumber(array) {
 }
 
 let numbers = [27, 34, 56, 73, 55, 110, 97];
-console.log('The Largest number is: ', getlargestNumber(numbers));
+console.log('The Largest number is:',getlargestNumber(numbers));
