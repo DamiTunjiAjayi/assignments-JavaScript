@@ -33,12 +33,26 @@ app.get('/error', (req, res, next) => {
   next(err);
 });
 
-// --- 3. 404 Handler ---
+
+// 3.Sample data: list of books
+const books = [
+  { id: 1, title: "Things Fall Apart", author: "Chinua Achebe" },
+  { id: 2, title: "Half of a Yellow Sun", author: "Chimamanda Ngozi Adichie" },
+  { id: 3, title: "The Lion and the Jewel", author: "Wole Soyinka" }
+];
+
+// New route to return books as JSON
+app.get('/books', (req, res) => {
+  res.json(books);
+});
+
+
+// --- 4. 404 Handler ---
 app.use((req, res, next) => {
   res.status(404).send('404 Not Found');
 });
 
-// --- 4. Error-Handling Middleware ---
+// --- 5. Error-Handling Middleware ---
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
   res.status(500).json({
