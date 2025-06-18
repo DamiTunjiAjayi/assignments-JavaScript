@@ -2,40 +2,33 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 // Make sure this URI has your encoded username/password and a default DB
-const uri = "mongodb+srv://goodcat:nhffff7nyIS@clustermynodeapp.plgopbp.mongodb.net/AppDB?retryWrites=true&w=majority";
+const uri = "mongodb+srv://damilaretunjiajayi:WJr8WmZ1Uasq6nF8@clustermynodeapp.plgopbp.mongodb.net/AppDB?retryWrites=true&w=majority&appName=ClusterMyNodeApp";
 
 async function run() {
-  // Create client and force TLS 1.2
-  const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    },
-    tls: true,
-    tlsMinimumVersion: "TLS1_2",
-  });
-
-  try {
-    console.log("⏳ Connecting (forced TLS1.2)...");
-    await client.connect();
-
-    const db = client.db("AppDB");
-    const users = db.collection("users");
-
-    // 1. Add a user
-    const newUser = { name: "Alice", email: "alice@example.com", age: 30 };
-    const result = await users.insertOne(newUser);
-    console.log("✅ Inserted user with _id:", result.insertedId);
-
-    // 2. Fetch and print all users
-    const all = await users.find().toArray();
-    console.log("📋 All users:", all);
-  } catch (err) {
-    console.error("❌ Operation error:", err);
-  } finally {
-    await client.close();
+    const client = new MongoClient(uri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    
+    });
+  
+    try {
+      console.log("⏳ Connecting to MongoDB Atlas...");
+      await client.connect();
+  
+      const users = client.db("AppDB").collection("users");
+      const result = await users.insertOne({ name: "Alice", email: "alice@example.com", age: 30 });
+      console.log("✅ Inserted user with _id:", result.insertedId);
+  
+      const all = await users.find().toArray();
+      console.log("📋 All users:", all);
+    } catch (err) {
+      console.error("❌ Operation error:", err);
+    } finally {
+      await client.close();
+    }
   }
-}
-
-run();
+  
+  run();
