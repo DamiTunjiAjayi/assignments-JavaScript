@@ -22,6 +22,8 @@ async function run() {
       const result = await users.insertOne({ name: "Alice", email: "alice@example.com", age: 30 });
       console.log("✅ Inserted user with _id:", result.insertedId);
   
+
+        // 2. Fetch and print all users
       const all = await users.find().toArray();
       console.log("📋 All users:", all);
     } catch (err) {
@@ -31,4 +33,5 @@ async function run() {
     }
   }
   
-  run();
+
+run();
