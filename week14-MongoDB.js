@@ -1,6 +1,11 @@
-
+require('dotenv').config();
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://damilaretunjiajayi:WJr8WmZ1Uasq6nF8@clustermynodeapp.plgopbp.mongodb.net/AppDB?retryWrites=true&w=majority&appName=ClusterMyNodeApp";
+
+// URL‑encode each value in case it contains special characters
+const user = encodeURIComponent(process.env.MONGODB_USER);
+const pass = encodeURIComponent(process.env.MONGODB_PASS);
+const db   = encodeURIComponent(process.env.MONGODB_DB);
+const uri = `mongodb+srv://${user}:${pass}` +`@clustermynodeapp.plgopbp.mongodb.net/${db}` +`?retryWrites=true&w=majority&appName=ClusterMyNodeApp`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
