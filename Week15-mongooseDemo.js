@@ -1,8 +1,8 @@
-// Week15-mongooseDemo.js
+// week15-mongooseValidation.js
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-// 1) Connect to MongoDB 
+// 1) Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Mongoose connected'))
   .catch(err => {
@@ -10,35 +10,48 @@ mongoose.connect(process.env.MONGODB_URI)
     process.exit(1);
   });
 
-// 2) Define a User schema & model
+// 2) Define User schema with validation
 const userSchema = new mongoose.Schema({
-  name:  { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  age:   { type: Number, min: 0 },
+  name:  { type: String, required: [true, 'Name is required'] },
+  email: { 
+    type: String, 
+    required: [true, 'Email is required'], 
+    unique: true, 
+    match: [/.+@.+\..+/, 'Invalid email format'] 
+  },
+  age:   { 
+    type: Number, 
+    required: [true, 'Age is required'], 
+    min: [1, 'Age must be at least 1'] 
+  },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 
-// 3) Add and then fetch a user
-async function runDemo() {
+// 3) Attempt to create two users—second should fail on unique/email or age
+async function runValidationDemo() {
   try {
-    // Upsert a single user
-    const alice = await User.findOneAndUpdate(
-      { email: 'alice@example.com' },
-      { name: 'Alice', email: 'alice@example.com', age: 30 },
-      { upsert: true, new: true }
-    );
-    console.log('👤 Upserted User:', alice);
+    // a) Valid user
+    const user1 = await User.create({ name: 'Bob', email: 'bob@example.com', age: 25 });
+    console.log('👤 Created:', user1.toObject());
 
-    // Retrieve all users
-    const allUsers = await User.find().lean();
-    console.log('📋 All Users:', allUsers);
-  } catch (err) {
-    console.error('❌ Demo error:', err);
+    // b) Invalid age (should throw a validation error)
+    try {
+      await User.create({ name: 'Tom', email: 'tom@example.com', age: 0 });
+    } catch (err) {
+      console.error('❌ Age validation error:', err.message);
+    }
+
+    // c) Duplicate email (should throw a unique-index error)
+    try {
+      await User.create({ name: 'Bobby', email: 'bob@example.com', age: 30 });
+    } catch (err) {
+      console.error('❌ Unique email error:', err.message);
+    }
   } finally {
     await mongoose.disconnect();
     console.log('🔌 Mongoose disconnected');
   }
 }
 
-runDemo();
+runValidationDemo().catch(err => console.error(err));
